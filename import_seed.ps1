@@ -12,3 +12,4 @@ Write-Host "Importing CSV seed data into database..."
 docker exec -i car_diagnostics_db psql -U car_user -d car_diagnostics -f /tmp/import_seed.sql
 
 Write-Host "Seed import finished."
+--tento subor bol vygenerovany systémom umelej inteligencie ChatGPT od spoločnosti OpenAI

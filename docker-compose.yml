@@ -51,3 +51,5 @@ services:
 
 volumes:
   car_diagnostics_pgdata:
+
+#tento subor bol vygenerovany systémom umelej inteligencie ChatGPT od spoločnosti OpenAI
