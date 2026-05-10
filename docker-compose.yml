@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: car_diagnostics_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: car_diagnostics
+      POSTGRES_USER: car_user
+      POSTGRES_PASSWORD: car_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - car_diagnostics_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U car_user -d car_diagnostics"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./car-diagnostics-backend
+    container_name: car_diagnostics_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql+psycopg://car_user:car_password@db:5432/car_diagnostics"
+      JWT_SECRET_KEY: "change-this-secret-key"
+      AUTO_CREATE_TABLES: "true"
+      BREVO_API_KEY: ""
+      BREVO_SENDER_EMAIL: ""
+      BREVO_SENDER_NAME: "Car-Diagnostics"
+      PORT: 5000
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./car-diagnostics-frontend
+      args:
+        REACT_APP_API_URL: http://localhost:5000
+        REACT_APP_WS_URL: http://localhost:5000
+    container_name: car_diagnostics_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  car_diagnostics_pgdata:
