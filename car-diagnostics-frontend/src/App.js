@@ -194,44 +194,54 @@ function App() {
 
   // AI: Funkcia wakeUpBackend s opakovanym healthcheckom backendu bola ciastocne generovana cez ChatGPT a nasledne upravena autorom.
   // Backend sa pred prihlasenim skusi prebudit, kedze hosting moze byt uspany.
-  const wakeUpBackend = async () => {
-    setLoadingStage("backend");
-    setLoadingMessage("Waking up the server...");
+    const wakeUpBackend = async () => {
+      const apiBaseUrl =
+        process.env.REACT_APP_API_URL || "https://car-diagnostics.onrender.com";
 
-    // Pocet pokusov je vyssi, aby mal pomaly backend cas odpovedat.
-    const maxAttempts = 30;
-    const delay = 2000;
+      const isLocalBackend =
+        apiBaseUrl.includes("localhost") ||
+        apiBaseUrl.includes("127.0.0.1");
 
-    // Healthcheck sa opakuje s kratkou pauzou medzi pokusmi.
-    for (let i = 0; i < maxAttempts; i++) {
-      setLoadingAttempt(i + 1);
-      try {
-        const response = await fetch("https://car-diagnostics.onrender.com/api/health", {
-          method: "GET",
-          mode: "cors",
-        });
-
-        // Ked backend odpovie, pokracuje sa kontrolou prihlasenia.
-        if (response.ok) {
-          console.log("Backend is awake!");
-          setLoadingStage("auth");
-          checkAuthStatus();
-          return;
-        }
-      } catch (err) {
-        console.log(`Attempt ${i + 1}: Backend not responding yet...`);
+      if (isLocalBackend) {
+        setLoadingStage("auth");
+        await checkAuthStatus();
+        return;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
+      setLoadingStage("backend");
+      setLoadingMessage("Waking up the server...");
 
-    setLoadingMessage("Server is taking too long to respond. Please refresh the page.");
-  };
+      const maxAttempts = 30;
+      const delay = 2000;
 
-  // Po prvom nacitani aplikacie sa spusti prebudenie backendu.
-  useEffect(() => {
-    wakeUpBackend();
-  }, []);
+      for (let i = 0; i < maxAttempts; i++) {
+        setLoadingAttempt(i + 1);
+
+        try {
+          const response = await fetch(`${apiBaseUrl}/api/health`, {
+            method: "GET",
+            mode: "cors",
+          });
+
+          if (response.ok) {
+            console.log("Backend is awake!");
+            setLoadingStage("auth");
+            await checkAuthStatus();
+            return;
+          }
+        } catch (err) {
+          console.log(`Attempt ${i + 1}: Backend not responding yet...`);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+
+      setLoadingMessage("Server is taking too long to respond. Please refresh the page.");
+    };
+
+    useEffect(() => {
+      wakeUpBackend();
+    }, []);
 
   // Tento efekt zatvara profilovy popup klikom mimo neho.
   useEffect(() => {
