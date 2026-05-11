@@ -33,4 +33,4 @@ Write-Host "Frontend: http://localhost:3000"
 Write-Host "Backend:  http://localhost:5000"
 Write-Host "Swagger:  http://localhost:5000/apidocs/"
 
---tento subor bol vygenerovany systémom umelej inteligencie ChatGPT od spoločnosti OpenAI
+#tento subor bol vygenerovany systémom umelej inteligencie ChatGPT od spoločnosti OpenAI
