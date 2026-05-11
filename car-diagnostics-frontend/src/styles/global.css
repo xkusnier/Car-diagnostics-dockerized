@@ -1,5 +1,18 @@
 /* src/styles/global.css */
 
+
+/*
+  OZNAČENIE POUŽITIA AI:
+  Tento súbor obsahuje časti, pri ktorých bola využitá umelá inteligencia
+  ako pomocný nástroj pri úprave štýlov, formátovaní a zjednotení vzhľadu UI.
+  AI-asistované časti sú vyznačené blokovými komentármi nižšie.
+  Približne 70 % súboru je označených ako generovaných alebo upravených s pomocou AI.
+  Výstup bol následne skontrolovaný a upravený autorom práce.
+*/
+/* AI-GENEROVANÉ / AI-UPRAVENÉ – ZAČIATOK BLOKU
+   Rozsah: globálne premenné, základné layouty, karty, tabuľky, formuláre,
+   tlačidlá, stavové prvky, autentifikačná obrazovka, modály a základná responzivita. */
+
 /* Spolocne CSS premenne pre farby, tiene, radiusy a prechody. */
 :root {
   --primary-blue: #2563eb;
@@ -1369,7 +1382,7 @@ code {
   }
 }
 
-
+/* AI-GENEROVANÉ / AI-UPRAVENÉ – KONIEC BLOKU
 /* =========================
    APP HEADER / NAVIGATION
    ========================= */
